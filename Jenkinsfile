@@ -5,9 +5,6 @@ pipeline{
       args  '-v $HOME/.npm:/root/.npm'  // Optional: reuse npm cache
     }
     }
-    tools{
-        nodejs 'Node 18'
-    }
     environment {
     GIT_BASE = 'origin/main'
   }
