@@ -1,0 +1,24 @@
+{
+  "name": "frishortner",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/KavyanshYadav/friShortner#readme",
+  "bugs": {
+    "url": "https://github.com/KavyanshYadav/friShortner/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KavyanshYadav/friShortner.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint": "^9.32.0",
+    "prettier": "^3.6.2"
+  }
+}
