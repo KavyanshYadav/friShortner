@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:18-alpine'
-      args '-v $HOME/.npm:/root/.npm'
-    }
-  }
+  agent any
 
   environment {
     GIT_BASE = 'origin/main'
@@ -16,37 +11,17 @@ pipeline {
         echo '======== Executing Checkout Stage ========'
         checkout scm
       }
-      post {
-        always {
-          echo '======== Checkout Stage Completed (Always) ========'
-        }
-        success {
-          echo '======== Checkout Stage Succeeded ========'
-        }
-        failure {
-          echo '======== Checkout Stage Failed ========'
-        }
-      }
     }
 
-    stage('Install Dependencies') {
+    stage('Lint and Format') {
       steps {
-        echo '======== Installing NPM Dependencies ========'
-        sh 'npm install'
-      }
-    }
-
-    stage('Run ESLint') {
-      steps {
-        echo '======== Running ESLint ========'
-        sh 'npx eslint . --ext .js,.jsx,.ts,.tsx || true'  // continue even if lint errors found
-      }
-    }
-
-    stage('Run Prettier Check') {
-      steps {
-        echo '======== Running Prettier Check ========'
-        sh 'npx prettier --check . || true'
+        script {
+          docker.image('node:18-alpine').inside('-v $HOME/.npm:/root/.npm') {
+            sh 'npm install'
+            sh 'npx eslint . --ext .js,.jsx,.ts,.tsx || true'
+            sh 'npx prettier --check . || true'
+          }
+        }
       }
     }
   }
