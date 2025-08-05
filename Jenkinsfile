@@ -29,8 +29,11 @@ pipeline {
         }
         stage("Checking environment "){
             steps{
+              script {
                 echo "====++++executing checking environment ++++===="
                 sh "node -v"
+
+              }
             }
             
         }
