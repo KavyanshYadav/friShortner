@@ -17,12 +17,12 @@ pipeline {
         }
 
         // Call the lint and format function
-        stage('Lint and Format Code') {
-            steps {
-                script {
-                }
-            }
-        }
+        // stage('Lint and Format Code') {
+        //     steps {
+        //         script {
+        //         }
+        //     }
+        // }
 
         // Call the microservices processing function
         stage('Process Microservices') {
