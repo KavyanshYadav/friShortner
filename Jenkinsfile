@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     detectAndBuildMicroservices(
-                        services: ["service-A", "service-B", "service-C"],
+                        services: ["frishortner-redirect-service"],
                         buildCommands: ["npm install", "npm test"],
                         dockerRegistry: "your-docker-registry",
                         dockerOrg: "your-org",
