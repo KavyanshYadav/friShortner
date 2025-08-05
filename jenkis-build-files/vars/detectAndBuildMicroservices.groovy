@@ -43,7 +43,7 @@ def call(Map config) {
         stage('Build and Test Changed Microservices') {
             parallel changedServices.collectEntries { serviceName ->
                 ["Build: ${serviceName}": {
-                    node {
+                    
                         def servicePath = "packages/${serviceName}/"
                         dir(servicePath) {
                             echo "🚀 Starting build and test for ${serviceName}..."
@@ -66,7 +66,7 @@ def call(Map config) {
                             //     echo "Skipping Docker push: 'dockerCredsId' not provided."
                             // }
                         }
-                    }
+                    
                 }]
             }
         }
