@@ -1,42 +1,54 @@
-@Library('jenkis-build-files') _
+@Library('my-jenkins-library@main') _
 
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    GIT_BASE = 'origin/main'
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        echo '======== Executing Checkout Stage ========'
-        checkout scm
-      }
+    environment {
+        GIT_BASE = 'origin/main'
     }
 
-    stage('Lint and Format') {
-      steps {
-        script {
-          docker.image('node:18-alpine').inside('-v $HOME/.npm:/root/.npm') {
-            sh 'npm install'
-            sh 'npx eslint . --ext .js,.jsx,.ts,.tsx || true'
-            sh 'npx prettier --check . || true'
-          }
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '======== Executing Checkout Stage ========'
+                checkout scm
+                sh 'git fetch origin ${env.CHANGE_TARGET}'
+            }
         }
-      }
-    }
-  }
 
-  post {
-    always {
-      echo '======== Pipeline Always Cleanup ========'
+        // Call the lint and format function
+        stage('Lint and Format Code') {
+            steps {
+                script {
+                }
+            }
+        }
+
+        // Call the microservices processing function
+        stage('Process Microservices') {
+            steps {
+                script {
+                    detectAndBuildMicroservices(
+                        services: ["service-A", "service-B", "service-C"],
+                        buildCommands: ["npm install", "npm test"],
+                        dockerRegistry: "your-docker-registry",
+                        dockerOrg: "your-org",
+                        dockerCredsId: "your-docker-registry-id"
+                    )
+                }
+            }
+        }
     }
-    success {
-      echo '======== Pipeline Executed Successfully ========'
+
+    post {
+        always {
+            echo '======== Pipeline Always Cleanup ========'
+        }
+        success {
+            echo '======== Pipeline Executed Successfully ========'
+        }
+        failure {
+            echo '======== Pipeline Execution Failed ========'
+        }
     }
-    failure {
-      echo '======== Pipeline Execution Failed ========'
-    }
-  }
 }
