@@ -4,27 +4,28 @@ pipeline {
     agent any
 
     environment {
-      BASE_TARGET = "${env.CHANGE_TARGET ?: env.GIT_BASE}"
-        }
+      // This is the key fix.
+      // For a PR, this will be the target branch (e.g., 'main').
+      // For a direct branch build, this will be the branch itself (e.g., 'main').
+      // This makes the variable reliable in all scenarios.
+      TARGET_BRANCH = "${env.CHANGE_TARGET ?: env.BRANCH_NAME}"
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                echo '======== Executing Checkout Stage ========'
+                echo "======== Executing Checkout Stage ========"
+                echo "Building for target branch: ${TARGET_BRANCH}"
                 checkout scm
-                sh "git fetch origin ${env.CHANGE_TARGET}"
+                
+                // This command is often not necessary because 'checkout scm' already
+                // fetches the correct code. You would only need this for advanced
+                // git operations, like diffing against the target branch.
+                // If you do need it, it's now safe to run.
+                sh "git fetch origin ${TARGET_BRANCH}"
             }
         }
 
-        // Call the lint and format function
-        // stage('Lint and Format Code') {
-        //     steps {
-        //         script {
-        //         }
-        //     }
-        // }
-
-        // Call the microservices processing function
         stage('Process Microservices') {
             steps {
                 script {
