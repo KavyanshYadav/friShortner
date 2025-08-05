@@ -1,21 +1,17 @@
 // my-jenkins-library/vars/detectAndBuildMicroservices.groovy
 
 def call(Map config) {
-    // A local variable is cleaner than a global environment variable.
     def changedServices = []
 
-    // Stage 1: Detect Changed Microservices
+    // Stage 1: Detect Changed Microservices (This part was correct)
     stage('Detect Changed Microservices') {
         script {
             try {
                 def diffCommand
-                // This logic correctly handles both Pull Request and direct branch builds.
                 if (env.CHANGE_TARGET) {
-                    // This is a Pull Request build. Compare HEAD against the PR's target branch.
                     echo "Pull Request build detected. Comparing against target branch: ${env.CHANGE_TARGET}"
                     diffCommand = "git diff --name-only HEAD origin/${env.CHANGE_TARGET}"
                 } else {
-                    // This is a direct push. Compare the latest commit (HEAD) against its parent (HEAD~1).
                     echo "Branch push build detected. Comparing HEAD with its parent commit."
                     diffCommand = "git diff --name-only HEAD~1 HEAD"
                 }
@@ -23,12 +19,9 @@ def call(Map config) {
                 def changedFiles = sh(returnStdout: true, script: diffCommand).trim().split('\\n')
                 echo "Files changed in this event:\n- ${changedFiles.join('\n- ')}"
 
-                // Loop through all defined services and check for changes
                 config.services.each { serviceName ->
                     def servicePath = "packages/${serviceName}/"
-                    def hasChanged = changedFiles.any { it.startsWith(servicePath) }
-                    
-                    if (hasChanged) {
+                    if (changedFiles.any { it.startsWith(servicePath) }) {
                         echo "✅ Detected changes in ${serviceName}."
                         changedServices.add(serviceName)
                     }
@@ -40,25 +33,18 @@ def call(Map config) {
                     echo "Microservices queued for build: ${changedServices.join(', ')}"
                 }
             } catch (e) {
-                // Fail the pipeline if change detection fails
                 error "FATAL: Failed to detect changes. Error: ${e.getMessage()}"
             }
         }
     }
 
-    // Stage 2: Build and Test Changed Microservices
-    stage('Build and Test Changed Microservices') {
-        // Use the local 'changedServices' variable to decide if this stage should run.
-        when { expression { !changedServices.isEmpty() } }
-        
-        steps {
-            // Building in parallel is much faster for multiple services.
+    // ✅ FIX IS HERE: Wrap the stage in an 'if' block
+    if (!changedServices.isEmpty()) {
+        stage('Build and Test Changed Microservices') {
             parallel changedServices.collectEntries { serviceName ->
-                // Create a dynamic stage for each service
                 ["Build: ${serviceName}": {
-                    node { // It's good practice to grab a node for each parallel branch
+                    node {
                         def servicePath = "packages/${serviceName}/"
-                        
                         dir(servicePath) {
                             echo "🚀 Starting build and test for ${serviceName}..."
                             
@@ -66,12 +52,10 @@ def call(Map config) {
                                 sh cmd
                             }
                             
-                            // Tag image with the short git commit hash for better traceability
                             def shortCommit = env.GIT_COMMIT.substring(0, 8)
                             def dockerImage = "${config.dockerRegistry}/${config.dockerOrg}/${serviceName}:${shortCommit}"
                             sh "docker build -t ${dockerImage} ."
                             
-                            // Only attempt to push if Docker credentials are provided in the config
                             // if (config.dockerCredsId) {
                             //     withCredentials([usernamePassword(credentialsId: config.dockerCredsId, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                             //         sh "docker login -u '${DOCKER_USER}' -p '${DOCKER_PASS}' ${config.dockerRegistry}"
