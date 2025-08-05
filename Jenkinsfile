@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo '======== Executing Checkout Stage ========'
                 checkout scm
-                sh 'git fetch origin ${env.CHANGE_TARGET}'
+                sh "git fetch origin ${env.CHANGE_TARGET}"
             }
         }
 
