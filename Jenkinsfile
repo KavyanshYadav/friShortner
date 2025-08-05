@@ -27,6 +27,13 @@ pipeline {
                 sh "git fetch origin ${TARGET_BRANCH}"
             }
         }
+        stage("checking environment "){
+            steps{
+                echo "====++++executing checking environment ++++===="
+                sh "node -v"
+            }
+            
+        }
 
         stage('Process Microservices') {
             steps {
