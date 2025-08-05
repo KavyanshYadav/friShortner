@@ -1,7 +1,9 @@
 @Library('jenkis-build-files') _
 
 pipeline {
-    agent any
+     agent {
+        docker { image 'node:20-alpine' }
+    }
 
     environment {
       // This is the key fix.
