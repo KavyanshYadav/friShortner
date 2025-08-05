@@ -78,9 +78,9 @@ def call(Map config) {
                             //         sh "docker push ${dockerImage}"
                             //     }
                             //     echo "⚓ Successfully built and pushed ${dockerImage}"
-                            } else {
-                                echo "Skipping Docker push: 'dockerCredsId' not provided."
-                            }
+                            // } else {
+                            //     echo "Skipping Docker push: 'dockerCredsId' not provided."
+                            // }
                         }
                     }
                 }]
