@@ -1,4 +1,4 @@
-@Library('jenkis-build-files@main') _
+@Library('jenkis-build-files') _
 
 pipeline {
     agent any
