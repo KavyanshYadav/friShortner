@@ -4,8 +4,8 @@ pipeline {
     agent any
 
     environment {
-        GIT_BASE = 'origin/main'
-    }
+      BASE_TARGET = "${env.CHANGE_TARGET ?: env.GIT_BASE}"
+        }
 
     stages {
         stage('Checkout') {
