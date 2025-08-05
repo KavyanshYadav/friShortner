@@ -31,7 +31,7 @@ pipeline {
         stage('Process Microservices') {
             steps {
                 script {
-                  echo "node -v"
+                  sh "node -v"
                     detectAndBuildMicroservices(
                         services: ["frishortner-redirect-service"],
                         buildCommands: ["npm install", "npm test"],
