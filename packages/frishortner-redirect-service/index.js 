@@ -1,7 +1,9 @@
 const express = require('express')
 
 const app = express()
-app.get('/', () => {})
+app.get('/', () => {
+  dss
+})
 app.get('*', (req, res) => {
   req.send()
   res.send('redirect service')
