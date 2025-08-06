@@ -11,6 +11,8 @@ pipeline {
 
     stages {
 
+        
+
 
         stage("Checking environment"){
             steps{
