@@ -10,7 +10,7 @@ pipeline {
         AWS_REGION = 'us-east-1'
         AWS_ACCESS_KEY_ID = 'test'            // Dummy creds for LocalStack
         AWS_SECRET_ACCESS_KEY = 'test'
-        LOCALSTACK_ENDPOINT = 'http://localstack:4566'
+        LOCALSTACK_ENDPOINT = 'http://localstackaws:4566'
     }
 
     stages {
