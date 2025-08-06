@@ -1,11 +1,13 @@
 @Library('jenkis-build-files') _
 
 pipeline {
-    agent {
-        docker { image 'node:20-aplpine-localstack'\
-                network 'jerkins-docker_default'
-         }
+   agent {
+    docker {
+        image 'node:20-aplpine-localstack'
+        args '--network jerkins-docker_default'
     }
+}
+
 
     environment {
       TARGET_BRANCH = "${env.CHANGE_TARGET ?: env.BRANCH_NAME}"
