@@ -25,8 +25,9 @@ pipeline {
             steps {
                 echo "======== Executing Checkout Stage ========"
                 echo "Building for target branch: ${TARGET_BRANCH}"
+                                sh "apt-get update && apt-get install -y git"
+
                 checkout scm
-                sh "apt-get update && apt-get install -y git"
                 
                 sh "git fetch origin ${TARGET_BRANCH}"
             }
