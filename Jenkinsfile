@@ -10,6 +10,17 @@ pipeline {
     }
 
     stages {
+
+        stage("Checking environment"){
+            steps{
+              script {
+                echo "====++++executing checking environment ++++===="
+                sh "node -v"
+              }
+            }
+        }
+
+
         stage('Checkout') {
             steps {
                 echo "======== Executing Checkout Stage ========"
@@ -19,14 +30,7 @@ pipeline {
                 sh "git fetch origin ${TARGET_BRANCH}"
             }
         }
-        stage("Checking environment"){
-            steps{
-              script {
-                echo "====++++executing checking environment ++++===="
-                sh "node -v"
-              }
-            }
-        }
+        
 
         stage('Process Microservices') {
             steps {
