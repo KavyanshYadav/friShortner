@@ -2,7 +2,7 @@
 
 pipeline {
     agent {
-        docker { image 'node:20' }
+        docker { image 'node:20-alphine' }
     }
 
     environment {
