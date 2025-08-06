@@ -7,13 +7,15 @@ pipeline {
 
     environment {
       TARGET_BRANCH = "${env.CHANGE_TARGET ?: env.BRANCH_NAME}"
+        AWS_REGION = 'us-east-1'
+        AWS_ACCESS_KEY_ID = 'test'            // Dummy creds for LocalStack
+        AWS_SECRET_ACCESS_KEY = 'test'
+        LOCALSTACK_ENDPOINT = 'http://localstack:4566'
     }
 
     stages {
 
         
-
-
         stage("Checking environment"){
             steps{
               script {
@@ -36,6 +38,15 @@ pipeline {
                 sh "git fetch origin ${TARGET_BRANCH}"
             }
         }
+
+        stage('Create S3 bucket on LocalStack') {
+            steps {
+                sh '''
+                  aws --endpoint-url=$LOCALSTACK_ENDPOINT s3 mb s3://my-local-bucket
+                '''
+            }
+        }
+
         
 
         stage('Process Microservices') {
