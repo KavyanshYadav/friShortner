@@ -2,7 +2,9 @@
 
 pipeline {
     agent {
-        docker { image 'node:20-aplpine-localstack' }
+        docker { image 'node:20-aplpine-localstack'\
+                network 'jerkins-docker_default'
+         }
     }
 
     environment {
