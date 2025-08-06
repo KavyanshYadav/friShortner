@@ -16,6 +16,7 @@ pipeline {
               script {
                 echo "====++++executing checking environment ++++===="
                 sh "node -v"
+                
               }
             }
         }
